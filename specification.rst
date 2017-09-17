@@ -18,67 +18,67 @@ Top level declarations and control flow
 ::
 
 	<contract> ::=
-	 contract <name> ( <ptrn> [: <sort>] [, <ptrn> [: <sort>]]\* ) [:<type>] = { <process> }
+	 contract <name> ( <ptrn> [: <sort>] [, <ptrn> [: <sort>]]* ) [:<type>] = { <process> }
 	<process> ::= Nil
-		\| for( <ptrn> <- <channel> [; <ptrn> <- <channel>]\* [; if <cond>] )<process>
-		\| select { <branch> [; <branch>]\* }
-		\| match <process> { <ptrn> => <process> [; <ptrn> => <process>]\* }
-		\| <channel> ! ( <process> [, <process>]\* )
-		\| <process> \| <process>
-		\| \*<channel>
-		\| new <var> [, <var>]\* in <process>
-		\| <name> ( <process> [, <process]\* )
-		\| <value>
-	<branch> ::= case <ptrn> <- <channel> [; <ptrn> <- <channel>]\* =><process>
+		| for( <ptrn> <- <channel> [; <ptrn> <- <channel>]* [; if <cond>] )<process>
+		| select { <branch> [; <branch>]* }
+		| match <process> { <ptrn> => <process> [; <ptrn> => <process>]* }
+		| <channel> ! ( <process> [, <process>]* )
+		| <process> | <process>
+		| *<channel>
+		| new <var> [, <var>]* in <process>
+		| <name> ( <process> [, <process]* )
+		| <value>
+	<branch> ::= case <ptrn> <- <channel> [; <ptrn> <- <channel>]* =><process>
 
 Builtin types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ::
 
 	<channel> ::= <address>
-		\| <var>
+		| <var>
 	<address> ::= <keccak256>
-		\| @<process>
+		| @<process>
 	<value> ::= <quantity>
-		\| <entity>
+		| <entity>
 	<quantity> ::= <boolean>
-		\| <integer>
+		| <integer>
 	<entity> ::= <char>
-		\| <datetime>
-		\| <struct>
-		\| <collection>
-	<struct> ::= <name> { <process> [, <process>]\* }
+		| <datetime>
+		| <struct>
+		| <collection>
+	<struct> ::= <name> { <process> [, <process>]* }
 	<collection> ::= <string>
-		\| <array>
-		\| <list>
+		| <array>
+		| <list>
 
 Pattern matching
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ::
 
 	<ptrn> ::= Nil
-		\| for( <var> [; if <var>] ) <ptrn>
-		\| <channel> ! ( <ptrn> [, <ptrn>]\* )
-		\| <ptrn> \| <ptrn>
-		\| \*<channel>
-		\| <name> ( <ptrn> [, <ptrn>]\* )
-		\| <vptrn>
-		\| match <ptrn> { <var> }
+		| for( <var> [; if <var>] ) <ptrn>
+		| <channel> ! ( <ptrn> [, <ptrn>]* )
+		| <ptrn> | <ptrn>
+		| *<channel>
+		| <name> ( <ptrn> [, <ptrn>]* )
+		| <vptrn>
+		| match <ptrn> { <var> }
 	<vptrn> ::= <strptrn>
-		\| <aptrn>
-		\| <lptrn>
+		| <aptrn>
+		| <lptrn>
 
 Behavioral types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ::
 
-	<property> ::= property <name> ( <var> [, <var>]\* ) = <type>
+	<property> ::= property <name> ( <var> [, <var>]* ) = <type>
 	<type> ::= true
-		\| Void
-		\| ~<type>
-		\| <type>&<type>
-		\| <type> \| <type>
-		\| hidden <var>[, <var>]\* . <type>
-		\| <channel>?<type>
-		\| <channel>!( <type>[, <type>]\* )
-		\| <name>( <channel> [,<var>]\* )
+		| Void
+		| ~<type>
+		| <type>&<type>
+		| <type> | <type>
+		| hidden <var>[, <var>]* . <type>
+		| <channel>?<type>
+		| <channel>!( <type>[, <type>]* )
+		| <name>( <channel> [,<var>]* )
