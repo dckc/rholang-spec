@@ -133,10 +133,10 @@ behavior is the “hello world” of the blockchain.
 
  contract Cell( get, set, state ) = {
   for( rtn <- get; v <- state ) {
-  rtn!( v ) \| state!( v ) \| Cell( get, set, state )
-  } \|
+  rtn!( v ) | state!( v ) | Cell( get, set, state )
+  } |
   for( newValue <- set; v <- state ) {
-  state!( newValue ) \| Cell( get, set, state )
+  state!( newValue ) | Cell( get, set, state )
   }
  }
 
@@ -162,14 +162,14 @@ recursively invoked.
 We can instantiate and run the Cell with a private state channel, called
 current, an initial value, initialised by
 ::
- new current in Cell( get, set, current ) \| current!( initial )
+ new current in Cell( get, set, current ) | current!( initial )
 
 and we can wrap that up in a Wallet contract that is parametric in the
 get and set channels and the initial value.
 ::
 
  contract Wallet( get, set, initial ) = {
-  new current in Cell( get, set, current ) \| current!( initial )
+  new current in Cell( get, set, current ) | current!( initial )
  }
 
 Finally, we can instantiate a Wallet.
@@ -192,10 +192,10 @@ run out of memory. A safer implementation would use the select construct
  contract Cell( get, set, state ) = {
   select {
    case rtn <- get; v <- state => {
-    rtn!( \*v ) \| state!( \*v ) \| Cell( get, set, state )
+    rtn!( *v ) | state!( *v ) | Cell( get, set, state )
    }
    case newValue <- set; v <- state => {
-    state!( \*newValue ) \| Cell( get, set, state )
+    state!( *newValue ) | Cell( get, set, state )
    }
   }
  }
@@ -218,10 +218,10 @@ the channel.
   for( request <- client; v <- state ) {
    match request {
     get{ rtn } => {
-     rtn!( v ) \| state!( v ) \| Cell( client, state )
+     rtn!( v ) | state!( v ) | Cell( client, state )
     }
     set{ newValue } => {
-     state!( newValue ) \| Cell( client, state )
+     state!( newValue ) | Cell( client, state )
     }
    }
   }
@@ -235,19 +235,19 @@ channels into messages
  contract Adapter( get, set, client ) = {
   select {
    case rtn <- get => {
-    client!( get{ rtn } ) \|
+    client!( get{ rtn } ) |
     Adapter( get, set, client )
    };
    case newValue <- set => {
-    client!( set{ newValue } ) \|
+    client!( set{ newValue } ) |
     Adapter( get, set, client )
    }
   }
  }
  contract Wallet( get, set, initial ) = {
   new client, current in
-   Adapter( get, set, client ) \|
-   current!( initial ) \|
+   Adapter( get, set, client ) |
+   current!( initial ) |
    Cell( client, current )
  }
 
@@ -256,7 +256,7 @@ interface.
 ::
 
  contract Wallet( client, initial ) = {
-  new current in Cell( client, current ) \| current!( initial )
+  new current in Cell( client, current ) | current!( initial )
  }
 
 Even with this basic example we can see many of the salient features of
